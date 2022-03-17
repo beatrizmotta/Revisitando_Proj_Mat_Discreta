@@ -1,80 +1,73 @@
 #include <stdio.h>
 #include <math.h>
 
-void transforma_em_um(unsigned long *num) {
-    *num = 1;
-}
-void transforma_em_zero(unsigned long *num) {
-    *num = 0;
-}
+void clean_zeros(int array[], int array_nova[], int tamanho, int counter1, int counter2) {
 
-void preencher_uns(unsigned long tamanho, unsigned long array[]) {
-    unsigned long i;
-    for (i = 0; i < tamanho; i++) {
-        transforma_em_um(&array[i]);
-    }
-}
-
-void identificar_primos(unsigned long stop_point, unsigned long tamanho, unsigned long array[]) {
-    unsigned long i;
-    unsigned long j;
-
-    for (j = 2; j <= stop_point; j++) {
-        for (i = 0; i < tamanho; i++) {
-            if (array[i] == 0) {
-                break;
-            }
-
-            if (i % j == 0 && i != j) {
-                transforma_em_zero(&array[i]);
-            }
-
+    if (counter2 == tamanho) {
+        return;
+    } else {
+        if (array[counter1] != 0) {
+            array_nova[counter2] = array[counter1];
+            counter2++;
         }
+        counter1++;
+        clean_zeros(array, array_nova, tamanho, counter1, counter2);
     }
 
 }
 
 int main() {
-    unsigned long num;
-    scanf("%lu", &num);
+    // Define o valor limite
+    int test_size = 524;
+    int square = ceil(sqrt(test_size-1));
+    int numbers[test_size];
 
-    num++;
+    // Preenche a array com 1s  
+    int i, j;
+    for (i = 0; i < test_size; i++) {
+        numbers[i] = 1;
+    }
 
-    unsigned long numbers[num];
-    unsigned long stop_point = ceil(sqrt(num));
+    // Determina quais dos números são primos
+    for (j = 2; j < square; j++) {
+        for (i = 0; i < test_size; i++) {
+            if (i % j == 0 && i != j) {
+                numbers[i] = 0;
+            }
+        }
+    }
 
-    unsigned long i;
-    unsigned long j;
+    // Substitui os 1s pelos números primos  
+    for (i = 0; i < test_size; i++) {
+        if (numbers[i] == 1) {
+            numbers[i] = i;
+        }
+    }
+    // A parte da contagem dos 1s, descobre quantos números primos tem e cria
+    // um array 
 
-    preencher_uns(num, numbers);
-    identificar_primos(stop_point, num, numbers);
+    int qt_of_primes = 0;
+    for (i = 0; i < test_size; i++) {
+        if (numbers[i] != 0) {
+            qt_of_primes++;
+        }
+    }
+    int primes[qt_of_primes];
+
     
+    clean_zeros(numbers, primes, qt_of_primes, 0, 0);
+    printf("O tanto de primos: %d\n", qt_of_primes);
     
-    
-    // -------- TESTE ---------  
-    // for (i = 0; i < num; i++) {
-    //     printf("%lu ", i);
-    // }
 
-    // printf("\n");
+    // Preenche quais são os primos 
 
-    // for (i = 0; i < num; i++) {
-    //     printf("%lu ", numbers[i]);
-    // }
+    for (i = 0; i < qt_of_primes; i++) {
+        printf("%d ", primes[i]);
+    }
 
 
-    /*
-    
-    Nós precisamos fazer o loop parando no stoppoint,
-    mas ao mesmo tempo, tendo acesso a todos os números
-    no nosso alcance. 
-    
-    Isso foi feito. 
 
-    Agora vamos ver como 
-    
-    */
+
 
     return 0;
 }
-
